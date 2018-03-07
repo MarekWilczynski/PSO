@@ -47,21 +47,25 @@ input_image = imread("..\\PSOTests\\TestImages\\barcodes1.jpg", 0)
 #for i in range(15):
 builder = PSObuilder()
 
-builder.segmantation_function = BarcodeSegmentation(input_image)
+builder.segmentation_function = BarcodeSegmentation(input_image)
 builder.fitness_function = CompareBinaryImages(ref_image)
+interia = 0.3
+speed = 0.05
+builder.swarm = Classic(speed, interia)
 builder.minimal_change = 0.0001
-builder.swarm = Classic(0.1, 0.2)
 
 builder.constraint_callback = proper_thresholds
 
-builder.particles_count = 1000
+builder.particles_count = 120
 
 # lower_threshold, upper threshold, mask size, mask size, object heigth, object width
 
 builder.lower_constraints = [0, 0, 3, 3, 1, 1]
 builder.upper_constraints = [255, 255, 25, 25, 800, 800]
 
+print("Initialization started")
 pso = builder.build()
+print("Initialization Finished")
 
 pso.start_optimization()
 

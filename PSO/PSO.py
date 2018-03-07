@@ -19,7 +19,7 @@ class PSO:
     
     def start_optimization(self):
         change = 1
-        best_particle = max(self.particle_swarm, key = lambda p:p.fitness,)
+        best_particle = deepcopy(max(self.particle_swarm, key = lambda p:p.fitness,))
 
         segmentation = self._segmentation_function.get_result
         get_fitness = self._fitness_function.get_result        
@@ -37,7 +37,8 @@ class PSO:
             end = time()
             print("Czas trwania segmentacji: ", end-start, " sekund")
 
-            best_particle = deepcopy(max(self.particle_swarm, key = lambda p:p.fitness,))
+            new_best_particle = deepcopy(max(self.particle_swarm, key = lambda p:p.fitness,))
+            best_particle = deepcopy(max([best_particle, new_best_particle], key = lambda p:p.fitness,))
             change = best_particle.fitness - previousBest
             it = it + 1
 

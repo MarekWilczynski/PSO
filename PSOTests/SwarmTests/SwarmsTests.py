@@ -69,7 +69,7 @@ class Test_SwarmsTests(unittest.TestCase):
 
         # when
 
-        builder.segmantation_function = Threshold(img)
+        builder.segmentation_function = Threshold(img)
         builder.fitness_function = CompareBinaryImages(thresholded)
         builder.minimal_change = 0.0001
         builder.swarm = Classic(0.1, 0.2)

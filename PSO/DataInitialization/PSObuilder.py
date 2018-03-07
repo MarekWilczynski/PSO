@@ -9,7 +9,7 @@ class PSObuilder:
     # swarm properties
     minimal_change = 0
     swarm = []
-    segmantation_function = []
+    segmentation_function = []
     fitness_function = []   
 
     # particles properties
@@ -27,7 +27,7 @@ class PSObuilder:
 
         pso._swarm = self.swarm
         pso._minimal_change = self.minimal_change
-        pso._segmentation_function = self.segmantation_function
+        pso._segmentation_function = self.segmentation_function
         pso._fitness_function = self.fitness_function
 
         factory = ParticleFactory(self.lower_constraints, self.upper_constraints)
@@ -38,7 +38,9 @@ class PSObuilder:
             
         #    pso.particle_swarm.append(random_particle)
         
-        particle_swarm = [Particle(factory.create_parameters_vector()) for x in range(self.particles_count)]       
+        particle_swarm = [Particle(factory.create_parameters_vector()) for x in range(self.particles_count)]               
+        for p in particle_swarm:
+            p.fitness = self.fitness_function.get_result( self.segmentation_function.get_result( p.parameters_vector ) )
 
         if(self.constraint_callback != []):
             new_particle_swarm = self.constraint_callback(particle_swarm)
