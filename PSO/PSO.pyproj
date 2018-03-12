@@ -25,16 +25,25 @@
     <Compile Include="DataInitialization\PSObuilder.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DataInitialization\PSONeighbourhoodBuilder.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="DataInitialization\__init__.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DataInitialization\ParticleFactory.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="FitnessFunctions\BinaryImagesDiceIndex.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="FitnessFunctions\FitnessFunction.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="FitnessFunctions\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Particles\NeighbourhoodParticle.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="SegmentationFunctions\BarcodeSegmentation.py" />
@@ -68,6 +77,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Swarms\Classic.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Swarms\NeighbourhoodSwarm.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Swarms\Swarm.py">

@@ -1,9 +1,9 @@
-from DataInitialization.PSObuilder import PSO
-from DataInitialization.PSObuilder import PSObuilder
+from PSO import PSO
+from DataInitialization.PSONeighbourhoodBuilder import PSONeighbourhoodBuilder
 
-from FitnessFunctions.CompareBinaryImages import CompareBinaryImages
+from FitnessFunctions.BinaryImagesDiceIndex import BinaryImagesDiceIndex
 from SegmentationFunctions.BarcodeSegmentation import BarcodeSegmentation
-from Swarms.Classic import Classic
+from Swarms.NeighbourhoodSwarm import NeighbourhoodSwarm
 
 from cv2 import imread
 
@@ -36,6 +36,7 @@ input_image = imread("..\\PSOTests\\TestImages\\barcodes1.jpg", 0)
 # TEST
 
 #param = [ 96.21995294, 206.82290273 ,  9.87580136 , 15.40594355 , 12.52747395, 172.89246698]
+#param = [86.67691748, 255. , 15.91886943 ,  3. , 1. , 1.] # pierwszy wynik sasiedztwa
 #b = BarcodeSegmentation(input_image)
 #t = b.get_result(param)
 
@@ -45,14 +46,18 @@ input_image = imread("..\\PSOTests\\TestImages\\barcodes1.jpg", 0)
 #
 
 #for i in range(15):
-builder = PSObuilder()
+builder = PSONeighbourhoodBuilder()
 
 builder.segmentation_function = BarcodeSegmentation(input_image)
-builder.fitness_function = CompareBinaryImages(ref_image)
+builder.fitness_function = BinaryImagesDiceIndex(ref_image)
 interia = 0.3
 speed = 0.05
-builder.swarm = Classic(speed, interia)
+neighbourhood_factor = 0.3
+local_factor = 0.25
+builder.swarm = NeighbourhoodSwarm(speed, interia, neighbourhood_factor, local_factor)
 builder.minimal_change = 0.0001
+builder.neighbourhood_size = 5
+
 
 builder.constraint_callback = proper_thresholds
 

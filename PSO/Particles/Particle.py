@@ -20,6 +20,6 @@ class Particle:
 
         self.parameters_vector = parameters_vector
 
-    def __init__(self, parameters_vector):
+    def __init__(self, parameters_vector, *args, **kwargs):
         self._speed = array([0] * len(parameters_vector))
         self.parameters_vector = array(parameters_vector)
