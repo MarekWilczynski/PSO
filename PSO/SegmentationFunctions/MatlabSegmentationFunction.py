@@ -17,12 +17,15 @@ class MatlabSegmentationFunction(base.SegmentationFunction, metaclass = base.abs
 
     @abstractmethod
     def __init__(self, input_image):
-        super().__init__(matlab.double(input_image.tolist()))
-
+        print("Matlab engine initialization started")
         self._matlab_eng = start_matlab() 
-
+        
         # changing directory to the one with matlab functions
         self._matlab_eng.cd("..\\PSO\\MatlabFiles")
+
+        super().__init__(matlab.double(input_image.tolist()))
+        print("Matlab engine initialization finished")
+        
         
     @abstractmethod
     def get_result(parameters_vector):

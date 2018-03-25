@@ -43,6 +43,9 @@
     <Compile Include="FitnessFunctions\__init__.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Utilities\NumericalToObjectConverter.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Particles\NeighbourhoodParticle.py">
       <SubType>Code</SubType>
     </Compile>
@@ -53,6 +56,7 @@
     <Compile Include="SegmentationFunctions\Threshold.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="SegmentationFunctions\LungsSegmentationMatlab.py" />
     <Compile Include="SegmentationFunctions\ThresholdMatlab.py" />
     <Compile Include="FitnessFunctions\CompareBinaryImages.py">
       <SubType>Code</SubType>
@@ -88,17 +92,32 @@
     <Compile Include="Swarms\__init__.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Utilities\SegmentationThreader.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Utilities\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="DataInitialization\" />
     <Folder Include="ExternalFiles\" />
     <Folder Include="FitnessFunctions\" />
+    <Folder Include="Images\" />
+    <Folder Include="Images\Input\Dicoms\" />
+    <Folder Include="Images\Input\" />
+    <Folder Include="Images\Referential\" />
+    <Folder Include="Images\Referential\Dicoms\" />
     <Folder Include="SegmentationFunctions\" />
     <Folder Include="MatlabFiles\" />
     <Folder Include="Particles\" />
     <Folder Include="Swarms\" />
+    <Folder Include="Utilities\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Images\Input\Dicoms\pluca_n1.dcm" />
+    <Content Include="Images\Referential\Dicoms\pluca_n1.png" />
+    <Content Include="MatlabFiles\Fun_SMP_SegmentacjaPluc.m" />
     <Content Include="MatlabFiles\Threshold.m" />
   </ItemGroup>
   <PropertyGroup>

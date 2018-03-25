@@ -16,8 +16,8 @@ class Classic(Swarm):
         intertion = array([self._inertion] * len(particle_swarm[0].parameters_vector))
         best_vector = array(best.parameters_vector)
 
-        print("Najlepszy wektor: ", best_vector)
-        print("Jego przystosowanie: ", best.fitness)
+        print("Best vector: ", best_vector)
+        print("Fitness value: ", best.fitness)
 
         for p in particle_swarm:
             np_param_vector = array(p.parameters_vector)

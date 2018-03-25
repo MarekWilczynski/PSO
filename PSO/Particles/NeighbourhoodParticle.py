@@ -11,6 +11,7 @@ class NeighbourhoodParticle(Particle):
 
     def __init__(self, particle):
         self.best_local_params = particle.parameters_vector
+        self.fitness = particle.fitness
 
         self._speed = particle._speed
         self.parameters_vector = particle.parameters_vector

@@ -41,10 +41,6 @@ class BarcodeSegmentation(base.SegmentationFunction):
         # image loading
         im = self._input_image
 
-        #riscalatura dell'immagine
-        scale = 1
-        im = cv2.resize(im, (int(im.shape[1] * scale), int(im.shape[0] * scale)))
-
         #blackhat
         kernel = np.ones((1, blackhat_kernel_size), np.uint8)
         im = morphologyEx(im, cv2.MORPH_BLACKHAT, kernel, anchor=(1, 0))

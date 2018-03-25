@@ -35,7 +35,7 @@ class PSO:
                 segmented_image = segmentation(p.parameters_vector)
                 p.fitness = get_fitness(segmented_image)
             end = time()
-            print("Czas trwania segmentacji: ", end-start, " sekund")
+            print("Segmentation time: ", end-start, " sekund")
 
             new_best_particle = deepcopy(max(self.particle_swarm, key = lambda p:p.fitness,))
             best_particle = deepcopy(max([best_particle, new_best_particle], key = lambda p:p.fitness,))

@@ -3,7 +3,7 @@ from numpy import array
 
 class NeighbourhoodSwarm(Swarm):
     """Swarm optimazing particles including their neighbourhood"""
-    # TODO: ZROBIĆ!!!
+    
     _omega = 0
     _inertion = 0
     _neighbourhood_factor = 0
@@ -21,9 +21,9 @@ class NeighbourhoodSwarm(Swarm):
         intertion = array([self._inertion] * len(particle_swarm[0].parameters_vector))
         best_vector = array(best.parameters_vector)
 
-        print("Najlepszy wektor: ", best_vector)
-        print("Jego przystosowanie: ", best.fitness)
-        print("Przynalezy do sasiedztwa: ", best.neighbourhood_index)
+        print("Best vector: ", best_vector)
+        print("Fitness: ", best.fitness)
+        print("Neighbourhood: ", best.neighbourhood_index)
 
         for p in particle_swarm:
             np_param_vector = array(p.parameters_vector)
