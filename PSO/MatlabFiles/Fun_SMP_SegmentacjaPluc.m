@@ -1,7 +1,17 @@
-function [Pluca] = Fun_SMP_SegmentacjaPluc(Im, spacing, thr, object_to_remove_size, se1, se2, se3, se4, se5)
+function [Pluca] = Fun_SMP_SegmentacjaPluc(spacing, thr, object_to_remove_size, se1, se2, se3, se4, se5)
+%% Data initialization by MW
+load('image_temp.mat');
+Im = img;
+se1 = Fun_Strel(char(se1(1)), 2, double(se1{2}), spacing);
+se2 = Fun_Strel(char(se2(1)), 2, double(se2{2}), spacing);
+se3 = Fun_Strel(char(se3(1)), 2, double(se3{2}), spacing);
+se4 = Fun_Strel(char(se4(1)), 2, double(se4{2}), spacing);
+se5 = Fun_Strel(char(se5(1)), 2, double(se5{2}), spacing);
+%%
+object_to_remove_size = double(object_to_remove_size);
 
-	object_to_remove_size = double(object_to_remove_size);
-
+    
+    %save('dane_test.mat', 'thr', 'spacing', 'Im','object_to_remove_size', 'se1','se2','se3','se4','se5')
 % Pawe³ Badura 2013
 % Zgrubna segmentacja pluc
 % Im - seria CT

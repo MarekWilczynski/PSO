@@ -6,7 +6,7 @@
     <ProjectGuid>de1dc703-6cfc-43b4-8998-29468000c403</ProjectGuid>
     <ProjectHome>.</ProjectHome>
     <StartupFile>main.py</StartupFile>
-    <SearchPath>..\PSO\;..\PSO\DataInitialization\;..\PSO\Particles\;..\PSO\Swarms\;..\PSO\FitnessFunctions\</SearchPath>
+    <SearchPath>..\PSO\;..\PSO\DataInitialization\;..\PSO\Particles\;..\PSO\Swarms\;..\PSO\FitnessFunctions\;..\PSO\Utilities\</SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
     <Name>PSOTests</Name>
@@ -40,10 +40,14 @@
     <Compile Include="SwarmTests\SwarmsTests.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="UtilitiesTests\UtilitiesTests.py">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="DataInitializationTests\" />
     <Folder Include="FitnessTests\" />
+    <Folder Include="UtilitiesTests\" />
     <Folder Include="SegmentationunctionsTests\" />
     <Folder Include="TestImages\" />
     <Folder Include="SwarmTests\" />

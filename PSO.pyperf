@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<ProfilingTarget xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <ProjectTarget>
+    <TargetProject>b2575e21-74d0-488a-81d4-d5ed5c2c33d3</TargetProject>
+    <FriendlyName>PSO</FriendlyName>
+  </ProjectTarget>
+  <Reports>
+    <Report>
+      <Filename>C:\Users\Marek\AppData\Local\Temp\PSO_20180327.vsp</Filename>
+    </Report>
+  </Reports>
+</ProfilingTarget>

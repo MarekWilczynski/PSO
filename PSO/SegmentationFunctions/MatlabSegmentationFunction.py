@@ -22,8 +22,10 @@ class MatlabSegmentationFunction(base.SegmentationFunction, metaclass = base.abs
         
         # changing directory to the one with matlab functions
         self._matlab_eng.cd("..\\PSO\\MatlabFiles")
-
-        super().__init__(matlab.double(input_image.tolist()))
+        matlab_img = matlab.double(input_image.tolist())
+        super().__init__(matlab_img)
+        self._matlab_eng.initialize_mat(matlab_img, nargout=0)
+        #super().__init__(matlab.double(input_image))
         print("Matlab engine initialization finished")
         
         

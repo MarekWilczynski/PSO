@@ -44,17 +44,17 @@ spacing = dcm.PixelSpacing
 
 #for i in range(15):
 
-se_types = [cv2.MORPH_RECT, cv2.MORPH_CROSS, cv2.MORPH_ELLIPSE]
+se_types = ['ball', 'ellipsoid']
 
 builder = PSONeighbourhoodBuilder()
 
 builder.segmentation_function = LungsSegmentationMatlab(input_image, spacing, se_types)
 builder.fitness_function = BinaryImagesDiceIndex(ref_image)
-interia = 0.3
+intertia = 0.3
 speed = 0.05
 neighbourhood_factor = 0.3
 local_factor = 0.25
-builder.swarm = NeighbourhoodSwarm(speed, interia, neighbourhood_factor, local_factor)
+builder.swarm = NeighbourhoodSwarm(speed, intertia, neighbourhood_factor, local_factor)
 builder.minimal_change = 0.0001
 builder.neighbourhood_size = 5
 
@@ -65,8 +65,8 @@ builder.particles_count = 25
 
 # threshold, objects to remove size, structural, (element type, structural element width, structural element height) x5
 
-builder.lower_constraints = [-2048, 0, 0, 1, 1,0, 1, 1,0, 1, 1,0, 1, 1,0, 1, 1]
-builder.upper_constraints = [2048, 200, 2.9999999, 20, 20,2.9999999, 20, 20,2.9999999, 20, 20,2.9999999, 20, 20,2.9999999, 20, 20]
+builder.lower_constraints = [-400, 0, 0, 1,0, 1,0, 1,0, 1,0, 1]
+builder.upper_constraints = [-100, 60, 1.9999999, 20,1.9999999, 20,1.9999999, 20,1.9999999, 20,1.9999999, 20]
 
 print("Initialization started")
 build_time = time()

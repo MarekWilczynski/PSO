@@ -30,12 +30,12 @@ class PSO:
             previousBest = best_particle.fitness
 
             self._swarm.optimize(self.particle_swarm, best_particle)
-            start = time()
+            start = time()            
             for p in self.particle_swarm:
                 segmented_image = segmentation(p.parameters_vector)
                 p.fitness = get_fitness(segmented_image)
             end = time()
-            print("Segmentation time: ", end-start, " sekund")
+            print("Segmentation time: {0:.3f}".format(end-start), " seconds")
 
             new_best_particle = deepcopy(max(self.particle_swarm, key = lambda p:p.fitness,))
             best_particle = deepcopy(max([best_particle, new_best_particle], key = lambda p:p.fitness,))
