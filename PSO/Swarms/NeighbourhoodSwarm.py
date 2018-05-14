@@ -18,7 +18,7 @@ class NeighbourhoodSwarm(Swarm):
 
     def optimize(self, particle_swarm, best):
         omega = array([self._omega] * len(particle_swarm[0].parameters_vector))
-        intertion = array([self._inertion] * len(particle_swarm[0].parameters_vector))
+        inertion = array([self._inertion] * len(particle_swarm[0].parameters_vector))
         best_vector = array(best.parameters_vector)
         print("Best vector: ")
         {print("{0:.3f}".format(val), end = ' ', sep = ' ', flush = True) for val in best_vector}
@@ -32,7 +32,7 @@ class NeighbourhoodSwarm(Swarm):
             step_vector = goal_vector * omega
 
             speed_vector = array(p._speed)
-            intertion_vector = speed_vector * intertion
+            intertion_vector = speed_vector * inertion
 
             # computing local and neighbour hood speed
             neighbourhood_speed = (np_param_vector - p.best_neighbourhood_params) * self._neighbourhood_factor

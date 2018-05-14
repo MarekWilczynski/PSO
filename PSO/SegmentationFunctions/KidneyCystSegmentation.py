@@ -27,8 +27,10 @@ class KidneyCystSegmentation(MatlabSegmentationFunction):
 
         self._segmentation_function = self._matlab_eng.python_RenCystSeg
         
-    def get_result(self, parameters_vector):
-      
-
-        binary_image = self._segmentation_function(self._input_image)
+    def get_result(self, parameters_vector):      
+        params_floored = list(parameters_vector)
+        params_floored[9] = floor(params_floored[9])
+        params_floored[10] = floor(params_floored[10])
+        parameters_vector = parameters_vector.tolist()
+        binary_image = self._segmentation_function(self._input_image, self._to_matlab_double(params_floored))
         return binary_image

@@ -3,11 +3,14 @@ from DataInitialization.ParticleFactory import ParticleFactory
 from Particles.Particle import Particle
 from numpy import array
 
+import sys
+
 class PSObuilder:
     """Class required to initialize an instance of PSO algorithm. Each property is required to be set."""
     
     # swarm properties
     minimal_change = 0
+    no_change_iteration_constraint = 1
     swarm = []
     segmentation_function = []
     fitness_function = []   
@@ -29,6 +32,7 @@ class PSObuilder:
         pso._minimal_change = self.minimal_change
         pso._segmentation_function = self.segmentation_function
         pso._fitness_function = self.fitness_function
+        pso._no_change_iteration_constraint = self.no_change_iteration_constraint
 
         factory = ParticleFactory(self.lower_constraints, self.upper_constraints)
 
@@ -38,9 +42,16 @@ class PSObuilder:
             
         #    pso.particle_swarm.append(random_particle)
         
-        particle_swarm = [Particle(factory.create_parameters_vector()) for x in range(self.particles_count)]               
+        particle_swarm = [Particle(factory.create_parameters_vector()) for x in range(self.particles_count)]          
+        el_count = 0
+        particles_count = len(particle_swarm)
         for p in particle_swarm:
+            el_count = el_count + 1
+            sys.stdout.write("\rParticle {0} of out {1}".format(el_count, particles_count))
+            sys.stdout.flush()
             p.fitness = self.fitness_function.get_result( self.segmentation_function.get_result( p.parameters_vector ) )
+            
+            
 
         if(self.constraint_callback != []):
             new_particle_swarm = self.constraint_callback(particle_swarm)
@@ -48,6 +59,7 @@ class PSObuilder:
             new_particle_swarm = particle_swarm
 
         pso.particle_swarm = new_particle_swarm
+        sys.stdout.write("\n")
         return pso
 
         

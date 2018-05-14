@@ -1,12 +1,12 @@
 from PSO import PSO
 from DataInitialization.PSONeighbourhoodBuilder import PSONeighbourhoodBuilder
 
-from FitnessFunctions.BinaryImagesDiceIndex import BinaryImagesDiceIndex
-from SegmentationFunctions.LungsSegmentationMatlab import LungsSegmentationMatlab
+from FitnessFunctions.MockDoingNothing import MockDoingNothing
+from SegmentationFunctions.KidneyCystSegmentation import KidneyCystSegmentation
 from Swarms.NeighbourhoodSwarm import NeighbourhoodSwarm
 
-from cv2 import imread
-from pydicom import dcmread
+#from cv2 import imread
+#from pydicom import dcmread
 from time import time
 
 
@@ -21,61 +21,69 @@ import cv2
 
 #    return particles_vector 
 
-# param 0 oznacza grayscale
-#ref_image = imread("..\\PSOTests\\TestImages\\barcodes_ref.png", 0)
-#input_image = imread("..\\PSOTests\\TestImages\\barcodes1.jpg", 0)
 
-dcm = dcmread(".\\Images\\Input\\Dicoms\\pluca_n1.dcm")
-ref_image = imread(".\\Images\\Referential\\Dicoms\\pluca_n1.png", 0)
-input_image = dcm.pixel_array
-spacing = dcm.PixelSpacing
+files = ["104_12_c.mha","105_12_c.mha","1112_10_c.mha","1259_10_c.mha","1472_11_c.mha","1480_10_c.mha","171_13_c.mha","2088_10_c.mha","2635_10_c.mha","2766_13_c.mha","597_11_c.mha","794_10_c.mha","833_13_c.mha","95_13_c.mha"]
+#files = ["171_13_c.mha","2088_10_c.mha","2635_10_c.mha","2766_13_c.mha","597_11_c.mha","794_10_c.mha","833_13_c.mha","95_13_c.mha"]
 
-# TEST
-
-#param = [ 96.21995294, 206.82290273 ,  9.87580136 , 15.40594355 , 12.52747395, 172.89246698]
-#param = [112.34931339, 189.09854254,  16.66923429,   7.29969195,  57.26843701,   1.        ] # pierwszy wynik sasiedztwa
-#b = BarcodeSegmentation(input_image)
-#t = b.get_result(param)
-
-#cv2.imshow(" PUPUPU", t)
-#cv2.waitKey(0)
-
-#
-
-#for i in range(15):
-
-se_types = ['ball', 'ellipsoid']
 
 builder = PSONeighbourhoodBuilder()
 
-builder.segmentation_function = LungsSegmentationMatlab(input_image, spacing, se_types)
-builder.fitness_function = BinaryImagesDiceIndex(ref_image)
-intertia = 0.3
-speed = 0.05
-neighbourhood_factor = 0.3
-local_factor = 0.25
-builder.swarm = NeighbourhoodSwarm(speed, intertia, neighbourhood_factor, local_factor)
+builder.segmentation_function = KidneyCystSegmentation(files[0][:-4])
+builder.fitness_function = MockDoingNothing([])
+inertia = 0.1
+global_speed = 0.2 # speed towards global maximum
+neighbourhood_factor = 0.3 # speed towards best particle in neigbourhood
+local_factor = 0.25 # speed towards local maximum
+builder.swarm = NeighbourhoodSwarm(global_speed, inertia, neighbourhood_factor, local_factor)
 builder.minimal_change = 0.0001
 builder.neighbourhood_size = 5
+builder.no_change_iteration_constraint = 5
 
 
-#builder.constraint_callback = proper_thresholds
+    #builder.constraint_callback = proper_thresholds
 
-builder.particles_count = 25
+builder.particles_count = 45
 
-# threshold, objects to remove size, structural, (element type, structural element width, structural element height) x5
 
-builder.lower_constraints = [-400, 0, 0, 1,0, 1,0, 1,0, 1,0, 1]
-builder.upper_constraints = [-100, 60, 1.9999999, 20,1.9999999, 20,1.9999999, 20,1.9999999, 20,1.9999999, 20]
+AD_N = [10, 80]
+AD_kappa = [1, 8]
+AD_lambda = [0, 0.05]
+GTstd = [0.5, 1.5]
+cAlpha = [0.005, 0.05]                                                  
+cBeta = [0.25, 0.75]
+dt = [0.5, 1.5]
+mu = [0.025, 0.15]
+G_alpha = [0.25, 1.5]   
+G_type = [0, 7]
+G_kernel_dims = [1, 20]
+
+
+builder.lower_constraints = [AD_N[0], AD_kappa[0], AD_lambda[0], GTstd[0], cAlpha[0], cBeta[0], dt[0], mu[0], G_alpha[0], G_type[0], G_kernel_dims[0]]
+builder.upper_constraints = [AD_N[1], AD_kappa[1], AD_lambda[1], GTstd[1], cAlpha[1], cBeta[1], dt[1], mu[1], G_alpha[1], G_type[1], G_kernel_dims[1]]
+
 
 print("Initialization started")
 build_time = time()
 pso = builder.build()
 print("Initialization Finished. Elapsed time: ", str(time() - build_time ))
 
-pso.start_optimization()
+for file in files:
 
-print("Best parameter vector:")
-print(', '.join(map(str, pso.get_best_particle().parameters_vector)))
-print("Best fitness:")
-print(pso.get_best_particle().fitness)
+    file_name = file[:-4]
+    img_name = file_name
+
+    pso._segmentation_function._input_image = img_name
+
+    pso.start_optimization()
+
+
+    vector_string = ', '.join(map(str, pso.get_best_particle().parameters_vector))
+    best_fitness = pso.get_best_particle().fitness
+
+    print("Best parameter vector:")
+    print(vector_string)
+    print("Best fitness:")
+    print(best_fitness)
+
+    with open("wyniki.txt", "a") as f:
+        f.write("Obraz {} uzyskal wartosc przystosowania {} dzieki wektorowi {}. \n".format(file_name, best_fitness, vector_string))

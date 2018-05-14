@@ -1,5 +1,21 @@
-function bin_img = python_RenCystSeg(img_path)
-
+function dice_ind = python_RenCystSeg(img_path, params)
+%%
+PSO_params = struct('AD_N', params(1), ... % 40 % by MW
+                    'AD_kappa', params(2), ... % 4.0
+                    'AD_lambda', params(3), ... % 0.15
+                    'GTstd', params(4), ... % 1.0
+                    'cAlpha', params(5), ... % 0.02
+                    'cBeta', params(6), ...  % 0.5
+                    'dt', params(7), ... % 1.0
+                    'mu', params(8), ... % 0.075
+                    'Niter', 1,... % def
+                    'max_iter', 100,... % def
+                    'G_params', struct( ...
+                        'G_alpha', params(9), ... % 1.0
+                        'G_type', params(10), ... % 0-6 0
+                        'G_kernel_dims', ones(1,3) * params(11))); % 2
+%%
+                
 % Pawe³ Badura, Bart³omiej Pyciñski, Wojciech Wiêc³awek 2015
 % Algorytm detekcji/segmentacji cyst w nerkach
 %   Skrypt g³ówny. Mo¿e byæ wywo³ywany bezpoœrednio lub z zewn¹trz przez funkcjê Fun_RenCystSeg_main z parametrami:
@@ -66,7 +82,7 @@ function bin_img = python_RenCystSeg(img_path)
 %% Czytanie wolumenu %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     tic;
-    ImFileName = img_path;
+    ImFileName = strcat('Obrazy\\', img_path);
     MFileName = [ImFileName, '_t.mha'];
     ImFileName = [ImFileName, '.mha'];
     ImInfo = mha_read_header(ImFileName);
@@ -84,14 +100,14 @@ function bin_img = python_RenCystSeg(img_path)
     XYZOrig = ImInfo.PixelDimensions;
     XYZ = XYZOrig;
     TIME.VolRead = toc;
-    disp(['Reading... DONE.   ',num2str(TIME.VolRead),'s']);
+    %disp(['Reading... DONE.   ',num2str(TIME.VolRead),'s']);
     if (PAR.DISP.ImOrig)    
         if (nnz(MOrig)) centrMOrig = Fun_GetCentroid(MOrig);
         else            centrMOrig = size(ImOrig) / 2;
         end
         Fun_DispSlices(ImOrig, MOrig, 22, round(centrMOrig(3)));     
     end
-    SUMM.pathFile = [int2str(dataData.Nr), '_', Fun_Nazwa(dataData.Yr, 0, 2), '_', dataData.Tp];
+    SUMM.pathFile = img_path;
 
     
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -127,7 +143,7 @@ function bin_img = python_RenCystSeg(img_path)
         % SeedPoints = Fun_SeedPointsResample(SeedPoints, DSV);
         XYZ = [PAR.a PAR.a PAR.a];
         TIME.Resample = toc;
-        disp(['Resampling... DONE.   ',num2str(TIME.Resample),'s']);
+        %disp(['Resampling... DONE.   ',num2str(TIME.Resample),'s']);
     else
         Im = ImOrig;
         M = MOrig;
@@ -189,7 +205,7 @@ function bin_img = python_RenCystSeg(img_path)
         tic;
         Lungs = Fun_SMP_SegmentacjaPluc(Im, PAR.LungSegMode);
         TIME.LungSeg = toc;
-        disp(['Lungs segmentation... DONE.   ',num2str(TIME.LungSeg),'s']);
+        %disp(['Lungs segmentation... DONE.   ',num2str(TIME.LungSeg),'s']);
         if (PAR.DISP.LungSeg)   Fun_DispSlices(Im, Lungs, 21, 1);   end
     end
     
@@ -201,7 +217,7 @@ function bin_img = python_RenCystSeg(img_path)
         tic;
         Im = Fun_ImWindow(Im, PAR.ImWinRange);
         TIME.ImWin = toc;
-        disp(['Image windowing... DONE.   ',num2str(TIME.ImWin),'s']);
+        %disp(['Image windowing... DONE.   ',num2str(TIME.ImWin),'s']);
     end
     if (PAR.DISP.Im)
         if (PAR.ifMOrigFeatures)        Info = Fun_GetRenCystTextInfo(ImFileName, MORC);
@@ -228,7 +244,7 @@ if (PAR.ifKidSeg)
                                                                 'KidSmallR', 'KidBigR', 'MKidR');
     end
     TIME.KidSeg = toc;
-    disp(['Kidneys segmentation... DONE.   ',num2str(TIME.KidSeg),'s']);
+    %disp(['Kidneys segmentation... DONE.   ',num2str(TIME.KidSeg),'s']);
     if (PAR.DISP.KidSeg)   Fun_DispSlices(Im, double(KidSmallL|KidSmallR) + 2*double(KidBigL|KidBigR) + 3*double(MKidL|MKidR), 21);   end
 end
 
@@ -289,7 +305,7 @@ end
         SUMM.KBR = KBR;
 
         TIME.KidFeatures = toc;
-        disp(['Kidneys features extraction... DONE.   ',num2str(TIME.KidFeatures),'s']);
+        %disp(['Kidneys features extraction... DONE.   ',num2str(TIME.KidFeatures),'s']);
     end
 
 
@@ -313,7 +329,7 @@ end
             load(fullfile('Res', [SUMM.pathFile, '_RenCystDet.mat']), 'LRenCyst', 'rpRenCyst', 'SUMM');
         end
         TIME.RenCystDet = toc;
-        disp(['Renal cysts detection... DONE.   ',num2str(TIME.RenCystDet),'s']);
+        %disp(['Renal cysts detection... DONE.   ',num2str(TIME.RenCystDet),'s']);
 %         if (PAR.DISP.RenCystDet)    Fun_DispSlices(Im, RenCyst + 2*M, 21, round(centrM(3)));   end
 %         if (PAR.DISP.RenCystDet)    Fun_DispSlices(Im-100*M, bwlabeln(RenCyst), 21, round(centrM(3)));  end
         if (PAR.DISP.RenCystDet)    Fun_DispSlices(Im-100*M, LRenCyst, 21, round(centrM(3)));  end
@@ -332,7 +348,7 @@ end
             bb = max([1, 1, 1; 1, 1, 1], min([w, k, g; w, k, g], bb + [-margin; margin])); 
             [RCF, SUMM_RCFS(rc)] =  Fun_RenCystFineSeg( Fun_ImCrop(Im, bb(:,[2 1 3])),...
                                     Fun_ImCrop((LRenCyst==rc), bb(:,[2 1 3])),...
-                                    Fun_ImCrop(M, bb(:,[2 1 3])));
+                                    Fun_ImCrop(M, bb(:,[2 1 3])), PSO_params);
 %             [RCF, SUMM_RCFS(rc)] =  TEST_Fun_RenCystFineSeg( Fun_ImCrop(Im, bb(:,[2 1 3])),...
 %                                     Fun_ImCrop((LRenCyst==rc), bb(:,[2 1 3])),...
 %                                     Fun_ImCrop(M, bb(:,[2 1 3])));
@@ -360,7 +376,7 @@ end
         end
         SUMM.RCFS = SUMM_RCFS;
         TIME.RenCystFineSeg = toc;
-        disp(['Renal cysts fine segmentation... DONE.   ',num2str(TIME.RenCystFineSeg),'s']);
+        %disp(['Renal cysts fine segmentation... DONE.   ',num2str(TIME.RenCystFineSeg),'s']);
     %         if (PAR.DISP.RenCystDet)    Fun_DispSlices(Im, RenCyst + 2*M, 21, round(centrM(3)));   end
         if (PAR.DISP.RenCystFineSeg)    Fun_DispSlices(Im-100*M, bwlabeln(RenCystFine), 21, round(centrM(3)));  end
     end
@@ -371,8 +387,13 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
     if (PAR.DISP.Profile)   profile viewer;     end
-
-    Res = [];
-
-    bin_img = double(RenCystFine);
+       
+    TP = RenCystFine .* MOrig;
+    TP = sum(TP(:));
+    FP = RenCystFine .* ~MOrig;
+    FP = sum(FP(:));
+    FN = ~RenCystFine .* MOrig;
+    FN = sum(FN(:));
+    dice_ind = 2 * TP ./ ( 2 * TP + FP + FN);
+    
 end
