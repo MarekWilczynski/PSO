@@ -20,7 +20,7 @@ class NeighbourhoodSwarm(Swarm):
         omega = array([self._omega] * len(particle_swarm[0].parameters_vector))
         inertion = array([self._inertion] * len(particle_swarm[0].parameters_vector))
         best_vector = array(best.parameters_vector)
-        print("Best vector: ")
+        print("Best vector before optimization: ")
         {print("{0:.3f}".format(val), end = ' ', sep = ' ', flush = True) for val in best_vector}
         print("")
         print("Fitness: ", best.fitness)

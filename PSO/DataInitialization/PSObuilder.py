@@ -43,14 +43,8 @@ class PSObuilder:
         #    pso.particle_swarm.append(random_particle)
         
         particle_swarm = [Particle(factory.create_parameters_vector()) for x in range(self.particles_count)]          
-        el_count = 0
+      
         particles_count = len(particle_swarm)
-        for p in particle_swarm:
-            el_count = el_count + 1
-            sys.stdout.write("\rParticle {0} of out {1}".format(el_count, particles_count))
-            sys.stdout.flush()
-            p.fitness = self.fitness_function.get_result( self.segmentation_function.get_result( p.parameters_vector ) )
-            
             
 
         if(self.constraint_callback != []):

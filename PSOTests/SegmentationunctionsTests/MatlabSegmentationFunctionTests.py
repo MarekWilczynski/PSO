@@ -41,7 +41,7 @@ class Test_MatlabSegmentationFunctionTests(unittest.TestCase):
 
     def test_matlab_3d_kidney_cysts_segmentation(self):
         # given        
-        file_name = "104_12_c"
+        file_name = "1112_10_c"
         img_name = file_name
         input_img = img_name  + ".mha"      
 
@@ -49,11 +49,11 @@ class Test_MatlabSegmentationFunctionTests(unittest.TestCase):
        
         fitness_fun = MockDoingNothing([])
 
-        seg_result = segmentation_fun.get_result([40, 4.0, 0.15, 1.0, 0.02, 0.5, 1.0, 0.075, 1, 0, 2])
+        seg_result = segmentation_fun.get_result([31.481480413485283, 8.0, 0.0, 0.5, 0.028951244924782335, 0.45007922780180337, 1.5, 0.025, 0.5693689698450262, 7.0, 20.0])
         fitness_val = fitness_fun.get_result(seg_result)
        
         # then
-        expected_value = 0.7477
+        expected_value = 0.9524
         self.assertAlmostEqual(fitness_val, expected_value, 3)
         
     def test_matlab_average_performance(self):

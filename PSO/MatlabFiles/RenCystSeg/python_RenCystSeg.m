@@ -1,4 +1,4 @@
-function dice_ind = python_RenCystSeg(img_path, params)
+function [dice_ind, tab] = python_RenCystSeg(img_path, params)
 %%
 PSO_params = struct('AD_N', params(1), ... % 40 % by MW
                     'AD_kappa', params(2), ... % 4.0
@@ -385,9 +385,8 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Wstawienie do wolumenu %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    
     if (PAR.DISP.Profile)   profile viewer;     end
-       
+    tab = ContingencyTable(MOrig, RenCystFine);
     TP = RenCystFine .* MOrig;
     TP = sum(TP(:));
     FP = RenCystFine .* ~MOrig;

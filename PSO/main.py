@@ -30,14 +30,14 @@ builder = PSONeighbourhoodBuilder()
 
 builder.segmentation_function = KidneyCystSegmentation(files[0][:-4])
 builder.fitness_function = MockDoingNothing([])
-inertia = 0.1
-global_speed = 0.2 # speed towards global maximum
-neighbourhood_factor = 0.3 # speed towards best particle in neigbourhood
-local_factor = 0.25 # speed towards local maximum
+inertia = 0.01
+global_speed = 0.1 # speed towards global maximum
+neighbourhood_factor = 0.05 # speed towards best particle in neigbourhood
+local_factor = 0.05 # speed towards local maximum
 builder.swarm = NeighbourhoodSwarm(global_speed, inertia, neighbourhood_factor, local_factor)
 builder.minimal_change = 0.0001
 builder.neighbourhood_size = 5
-builder.no_change_iteration_constraint = 5
+builder.no_change_iteration_constraint = 3
 
 
     #builder.constraint_callback = proper_thresholds
@@ -55,8 +55,7 @@ dt = [0.5, 1.5]
 mu = [0.025, 0.15]
 G_alpha = [0.25, 1.5]   
 G_type = [0, 7]
-G_kernel_dims = [1, 20]
-
+G_kernel_dims = [1, 20]     
 
 builder.lower_constraints = [AD_N[0], AD_kappa[0], AD_lambda[0], GTstd[0], cAlpha[0], cBeta[0], dt[0], mu[0], G_alpha[0], G_type[0], G_kernel_dims[0]]
 builder.upper_constraints = [AD_N[1], AD_kappa[1], AD_lambda[1], GTstd[1], cAlpha[1], cBeta[1], dt[1], mu[1], G_alpha[1], G_type[1], G_kernel_dims[1]]
@@ -67,18 +66,42 @@ build_time = time()
 pso = builder.build()
 print("Initialization Finished. Elapsed time: ", str(time() - build_time ))
 
+with open("wyniki.txt", "a") as f:
+       f.write("Swarm parameters\n")
+       f.write("Inetria {}".format(inertia))
+       f.write("global_speed {} \n".format(global_speed))
+       f.write("neighbourhood_factor {} \n".format(neighbourhood_factor))
+       f.write("neighbourhood_size {} \n".format(builder.neighbourhood_size))
+       f.write("no_change_iteration_constraint {} \n".format(builder.no_change_iteration_constraint))
+       f.write("particles_count {} \n".format(builder.particles_count))
+       f.write("Fitness Function {} \n".format(builder.fitness_function.__class__.__name__))
+       f.write("Segmentation function {}. \n".format(builder.segmentation_function.__class__.__name__))
+
+       f.write("\n Parameters constraints \n")
+       f.write("AD_N {} \n".format(AD_N))
+       f.write("AD_kappa {} \n".format(AD_kappa))
+       f.write("AD_lambda {} \n".format(AD_lambda))
+       f.write("GTstd {} \n".format(GTstd))
+       f.write("cAlpha {} \n".format(cAlpha))
+       f.write("cBeta {} \n".format(cBeta))
+       f.write("mu {} \n".format(mu))
+       f.write("G_alpha {} \n".format(G_alpha))
+       f.write("G_type {} \n".format(G_type))
+       f.write("G_kernel_dims {} \n".format(G_kernel_dims))
+
 for file in files:
 
     file_name = file[:-4]
     img_name = file_name
+    print("Currently processing: " + file_name)
 
     pso._segmentation_function._input_image = img_name
 
     pso.start_optimization()
 
-
-    vector_string = ', '.join(map(str, pso.get_best_particle().parameters_vector))
-    best_fitness = pso.get_best_particle().fitness
+    best_particle = pso.get_best_particle()
+    vector_string = ', '.join(format(x, "0.3f") for x in best_particle.parameters_vector)
+    best_fitness = best_particle.fitness
 
     print("Best parameter vector:")
     print(vector_string)
