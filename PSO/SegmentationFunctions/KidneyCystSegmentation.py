@@ -8,7 +8,7 @@ from math import floor
 from Utilities.NumericalToObjectConverter import NumericalToObjectConverter
 
 class KidneyCystSegmentation(MatlabSegmentationFunction):
-    """Lungs segmentation by IiAM PolSl"""
+    """Kindey cyst segmentation segmentation by IiAM PolSl"""
 
     _spacing = []
     _segmentation_function = []
@@ -31,5 +31,5 @@ class KidneyCystSegmentation(MatlabSegmentationFunction):
         params_floored = list(parameters_vector)
         params_floored[9] = floor(params_floored[9])
         params_floored[10] = floor(params_floored[10])
-        binary_image = self._segmentation_function(self._input_image, self._to_matlab_double(params_floored))
-        return binary_image
+        dice_ind = self._segmentation_function(self._input_image, self._to_matlab_double(params_floored))
+        return dice_ind

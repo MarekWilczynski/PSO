@@ -3,6 +3,7 @@ from numpy import array
 class Particle:
     """Base class representing a particle moving in multi-dimensional space"""
     parameters_vector = []
+    best_local_params = []
     fitness = 0
 
     _speed = []

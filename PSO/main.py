@@ -22,7 +22,7 @@ import cv2
 #    return particles_vector 
 
 
-files = ["104_12_c.mha","105_12_c.mha","1112_10_c.mha","1259_10_c.mha","1472_11_c.mha","1480_10_c.mha","171_13_c.mha","2088_10_c.mha","2635_10_c.mha","2766_13_c.mha","597_11_c.mha","794_10_c.mha","833_13_c.mha","95_13_c.mha"]
+files = ["105_12_c.mha", "104_12_c.mha","1112_10_c.mha","1259_10_c.mha","1472_11_c.mha","1480_10_c.mha","171_13_c.mha","2088_10_c.mha","2635_10_c.mha","2766_13_c.mha","597_11_c.mha","794_10_c.mha","833_13_c.mha","95_13_c.mha"]
 #files = ["171_13_c.mha","2088_10_c.mha","2635_10_c.mha","2766_13_c.mha","597_11_c.mha","794_10_c.mha","833_13_c.mha","95_13_c.mha"]
 
 
@@ -30,10 +30,10 @@ builder = PSONeighbourhoodBuilder()
 
 builder.segmentation_function = KidneyCystSegmentation(files[0][:-4])
 builder.fitness_function = MockDoingNothing([])
-inertia = 0.01
-global_speed = 0.1 # speed towards global maximum
-neighbourhood_factor = 0.05 # speed towards best particle in neigbourhood
-local_factor = 0.05 # speed towards local maximum
+inertia = 0.05
+global_speed = 0.2 # speed towards global maximum
+neighbourhood_factor = 0.1 # speed towards best particle in neigbourhood
+local_factor = 0.1 # speed towards local maximum
 builder.swarm = NeighbourhoodSwarm(global_speed, inertia, neighbourhood_factor, local_factor)
 builder.minimal_change = 0.0001
 builder.neighbourhood_size = 5
@@ -45,17 +45,17 @@ builder.no_change_iteration_constraint = 3
 builder.particles_count = 45
 
 
-AD_N = [10, 80]
-AD_kappa = [1, 8]
+AD_N = [1, 200]
+AD_kappa = [1, 20]
 AD_lambda = [0, 0.05]
-GTstd = [0.5, 1.5]
-cAlpha = [0.005, 0.05]                                                  
-cBeta = [0.25, 0.75]
-dt = [0.5, 1.5]
-mu = [0.025, 0.15]
-G_alpha = [0.25, 1.5]   
+GTstd = [0.25, 5]
+cAlpha = [0, 1]                                                  
+cBeta = [0, 1]
+dt = [0, 3]
+mu = [0, 0.5]
+G_alpha = [0.1, 3]   
 G_type = [0, 7]
-G_kernel_dims = [1, 20]     
+G_kernel_dims = [1, 80]     
 
 builder.lower_constraints = [AD_N[0], AD_kappa[0], AD_lambda[0], GTstd[0], cAlpha[0], cBeta[0], dt[0], mu[0], G_alpha[0], G_type[0], G_kernel_dims[0]]
 builder.upper_constraints = [AD_N[1], AD_kappa[1], AD_lambda[1], GTstd[1], cAlpha[1], cBeta[1], dt[1], mu[1], G_alpha[1], G_type[1], G_kernel_dims[1]]
@@ -67,8 +67,8 @@ pso = builder.build()
 print("Initialization Finished. Elapsed time: ", str(time() - build_time ))
 
 with open("wyniki.txt", "a") as f:
-       f.write("Swarm parameters\n")
-       f.write("Inetria {}".format(inertia))
+       f.write("Swarm parameters \n")
+       f.write("Inetria {} \n".format(inertia))
        f.write("global_speed {} \n".format(global_speed))
        f.write("neighbourhood_factor {} \n".format(neighbourhood_factor))
        f.write("neighbourhood_size {} \n".format(builder.neighbourhood_size))
@@ -87,7 +87,7 @@ with open("wyniki.txt", "a") as f:
        f.write("mu {} \n".format(mu))
        f.write("G_alpha {} \n".format(G_alpha))
        f.write("G_type {} \n".format(G_type))
-       f.write("G_kernel_dims {} \n".format(G_kernel_dims))
+       f.write("G_kernel_dims {} \n \n".format(G_kernel_dims))
 
 for file in files:
 

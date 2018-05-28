@@ -17,35 +17,30 @@ class NeighbourhoodSwarm(Swarm):
 
 
     def optimize(self, particle_swarm, best):
+
+        neighbourhood_indexes = range(max(particle_swarm, key = lambda p: p.neighbourhood_index).neighbourhood_index)
+        for neighbourhood in neighbourhood_indexes:
+            _update_neighbourhood_data(particle_swarm, neighbourhood)
+
         omega = array([self._omega] * len(particle_swarm[0].parameters_vector))
         inertion = array([self._inertion] * len(particle_swarm[0].parameters_vector))
-        best_vector = array(best.parameters_vector)
-        print("Best vector before optimization: ")
-        {print("{0:.3f}".format(val), end = ' ', sep = ' ', flush = True) for val in best_vector}
-        print("")
-        print("Fitness: ", best.fitness)
-        print("Neighbourhood: ", best.neighbourhood_index)
+        best_vector = array(best.parameters_vector)        
 
         for p in particle_swarm:
             np_param_vector = array(p.parameters_vector)
-            goal_vector = np_param_vector - best_vector
+            goal_vector = best_vector - np_param_vector
             step_vector = goal_vector * omega
 
             speed_vector = array(p._speed)
             intertion_vector = speed_vector * inertion
 
             # computing local and neighbour hood speed
-            neighbourhood_speed = (np_param_vector - p.best_neighbourhood_params) * self._neighbourhood_factor
-            local_speed = (np_param_vector - p.best_local_params) * self._local_factor
+            neighbourhood_speed = (p.best_neighbourhood_params - np_param_vector) * self._neighbourhood_factor
+            local_speed = (p.best_local_params - np_param_vector) * self._local_factor
             
             # computing resulting speed
             final_vector = step_vector + intertion_vector + neighbourhood_speed + local_speed
             p.move(final_vector, self._lower_constraints, self._upper_constraints)
-
-           
-        neighbourhood_indexes = range(max(particle_swarm, key = lambda p: p.neighbourhood_index).neighbourhood_index)
-        for neighbourhood in neighbourhood_indexes:
-            _update_neighbourhood_data(particle_swarm, neighbourhood)
 
         return particle_swarm
 

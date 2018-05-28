@@ -28,7 +28,13 @@ class PSO:
         print("Initializing fitness values")
         self.update_fitness_values() 
         best_particle = deepcopy(max(self.particle_swarm, key = lambda p:p.fitness,))
-        print("Initializing fitness values finished")        
+        print("Initializing fitness values finished")
+
+        print("Best vector before optimization: ")
+        {print("{0:.3f}".format(val), end = ' ', sep = ' ', flush = True) for val in best_particle.parameters_vector}
+        print("")
+        print("Fitness: ", best_particle.fitness)
+        print("Neighbourhood: ", best_particle.neighbourhood_index)
         
         while(no_fitness_change_count < self._no_change_iteration_constraint):
             previousBest = best_particle.fitness
@@ -71,5 +77,10 @@ class PSO:
             sys.stdout.write("\rParticle {0} of out {1}".format(el_count, particles_count))
             sys.stdout.flush()
             segmented_image = self._segmentation_function.get_result(p.parameters_vector)
-            p.fitness = self._fitness_function.get_result(segmented_image)
+            new_fitness = self._fitness_function.get_result(segmented_image)
+
+            if(p.fitness < new_fitness):
+                p.best_local_params = p.parameters_vector
+
+            p.fitness = new_fitness
         sys.stdout.write("\n")
