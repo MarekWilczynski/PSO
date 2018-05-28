@@ -1,4 +1,4 @@
-from SegmentationFunctions.MatlabSegmentationFunction import MatlabSegmentationFunction
+from SegmentationFunctions.KidneyCystSegmentation import KidneyCystSegmentation
 import matlab
 from cv2 import getStructuringElement
 from matlab.engine import start_matlab
@@ -7,7 +7,7 @@ from math import floor
 
 from Utilities.NumericalToObjectConverter import NumericalToObjectConverter
 
-class KidneyCystSegmentationMultipleImages(KidneyCystSegmentationMultipleImages):
+class KidneyCystSegmentationMultipleImages(KidneyCystSegmentation):
     
     def __init__(self, input_img):
         """input image is a list of file names in RenCystSegmentation"""

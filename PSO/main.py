@@ -2,7 +2,7 @@ from PSO import PSO
 from DataInitialization.PSONeighbourhoodBuilder import PSONeighbourhoodBuilder
 
 from FitnessFunctions.MockDoingNothing import MockDoingNothing
-from SegmentationFunctions.KidneyCystSegmentation import KidneyCystSegmentation
+from SegmentationFunctions.KidneyCystSegmentationMultipleImages import KidneyCystSegmentationMultipleImages
 from Swarms.NeighbourhoodSwarm import NeighbourhoodSwarm
 
 #from cv2 import imread
@@ -28,7 +28,7 @@ files = [file[:-4] for file in files_with_extensions]
 
 builder = PSONeighbourhoodBuilder()
 
-builder.segmentation_function = KidneyCystSegmentation(files)
+builder.segmentation_function = KidneyCystSegmentationMultipleImages(files)
 builder.fitness_function = MockDoingNothing([])
 inertia = 0.05
 global_speed = 0.2 # speed towards global maximum
