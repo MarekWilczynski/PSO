@@ -22,13 +22,13 @@ import cv2
 #    return particles_vector 
 
 
-files = ["105_12_c.mha", "104_12_c.mha","1112_10_c.mha","1259_10_c.mha","1472_11_c.mha","1480_10_c.mha","171_13_c.mha","2088_10_c.mha","2635_10_c.mha","2766_13_c.mha","597_11_c.mha","794_10_c.mha","833_13_c.mha","95_13_c.mha"]
+files_with_extensions = ["105_12_c.mha", "104_12_c.mha","1112_10_c.mha","1259_10_c.mha","1472_11_c.mha","1480_10_c.mha","171_13_c.mha","2088_10_c.mha","2635_10_c.mha","2766_13_c.mha","597_11_c.mha","794_10_c.mha","833_13_c.mha","95_13_c.mha"]
 #files = ["171_13_c.mha","2088_10_c.mha","2635_10_c.mha","2766_13_c.mha","597_11_c.mha","794_10_c.mha","833_13_c.mha","95_13_c.mha"]
-
+files = [file[:-4] for file in files_with_extensions]
 
 builder = PSONeighbourhoodBuilder()
 
-builder.segmentation_function = KidneyCystSegmentation(files[0][:-4])
+builder.segmentation_function = KidneyCystSegmentation(files)
 builder.fitness_function = MockDoingNothing([])
 inertia = 0.05
 global_speed = 0.2 # speed towards global maximum
@@ -89,24 +89,18 @@ with open("wyniki.txt", "a") as f:
        f.write("G_type {} \n".format(G_type))
        f.write("G_kernel_dims {} \n \n".format(G_kernel_dims))
 
-for file in files:
 
-    file_name = file[:-4]
-    img_name = file_name
-    print("Currently processing: " + file_name)
 
-    pso._segmentation_function._input_image = img_name
+pso.start_optimization()
 
-    pso.start_optimization()
+best_particle = pso.get_best_particle()
+vector_string = ', '.join(format(x, "0.3f") for x in best_particle.parameters_vector)
+best_fitness = best_particle.fitness
 
-    best_particle = pso.get_best_particle()
-    vector_string = ', '.join(format(x, "0.3f") for x in best_particle.parameters_vector)
-    best_fitness = best_particle.fitness
+print("Best parameter vector:")
+print(vector_string)
+print("Best fitness:")
+print(best_fitness)
 
-    print("Best parameter vector:")
-    print(vector_string)
-    print("Best fitness:")
-    print(best_fitness)
-
-    with open("wyniki.txt", "a") as f:
-        f.write("Obraz {} uzyskal wartosc przystosowania {} dzieki wektorowi {}. \n".format(file_name, best_fitness, vector_string))
+with open("wyniki.txt", "a") as f:
+    f.write("Najlepsza segmentacja dzieki wektorowi {}. \n".format(vector_string, best_fitness/len(files)))
