@@ -7,8 +7,9 @@ from Swarms.Classic import Classic
 from DataInitialization.ParticleFactory import ParticleFactory
 from DataInitialization.PSObuilder import PSObuilder
 from SegmentationFunctions.Threshold import Threshold
-from FitnessFunctions.CompareBinaryImages import CompareBinaryImages
+from FitnessFunctions.BinaryImagesDiceIndex import BinaryImagesDiceIndex
 from numpy import array
+import numpy
 
 def proper_thresholds(particles_vector):
         # function used for additional constraints
@@ -63,6 +64,9 @@ class Test_SwarmsTests(unittest.TestCase):
         img = cv.imread("..\\PSOTests\\TestImages\\threshold_test.jpg", 0)
         lower_threshold = 130
         upper_threhshold = 255
+        inertion = 0.05
+        speed_factor = 0.2
+        local_factor = 0.1
         thresholded = cv.threshold(img, lower_threshold, upper_threhshold, cv.THRESH_BINARY)
         thresholded = thresholded[1] # strange value on index #1
         builder = PSObuilder()
@@ -70,16 +74,17 @@ class Test_SwarmsTests(unittest.TestCase):
         # when
 
         builder.segmentation_function = Threshold(img)
-        builder.fitness_function = CompareBinaryImages(thresholded)
-        builder.minimal_change = 0.0001
-        builder.swarm = Classic(0.1, 0.2)
+        builder.fitness_function = BinaryImagesDiceIndex(thresholded)
+        builder.minimal_change = 0.00001
+        builder.swarm = Classic(speed_factor, inertion, local_factor)
+        builder.no_change_iteration_constraint = 5
 
-        builder.particles_count = 80
+        builder.particles_count = 150
 
-        builder.lower_constraints = [0, 0]
-        builder.upper_constraints = [255, 255]
+        builder.lower_constraints = [0]
+        builder.upper_constraints = [255]
 
-        builder.constraint_callback = proper_thresholds
+        builder.constraint_callback = []
 
         pso = builder.build()
         pso.start_optimization()
@@ -87,7 +92,8 @@ class Test_SwarmsTests(unittest.TestCase):
         # then
         result = pso.get_best_particle().parameters_vector
         result_lower = result[0]
-        result_upper = result[1]
+        #result_upper = result[1]
+        
          
         # dark image - upper border not important 
 
@@ -95,6 +101,52 @@ class Test_SwarmsTests(unittest.TestCase):
         self.assertTrue(result_lower > lower_threshold - 1)
         # self.assertEqual(result_upper, upper_threshold)
 
+    def test_should_find_threshold_value_distribution(self):
+        counter = 0
+        threshold_values = []
+        for i in range(1000):
+            # given
+            img = cv.imread("..\\PSOTests\\TestImages\\threshold_test.jpg", 0)
+            lower_threshold = 130
+            upper_threhshold = 255
+            inertion = 0.05
+            speed_factor = 0.2
+            local_factor = 0.1
+            thresholded = cv.threshold(img, lower_threshold, upper_threhshold, cv.THRESH_BINARY)
+            thresholded = thresholded[1] # strange value on index #1
+            builder = PSObuilder()
+
+            # when
+
+            builder.segmentation_function = Threshold(img)
+            builder.fitness_function = BinaryImagesDiceIndex(thresholded)
+            builder.minimal_change = 0.00001
+            builder.swarm = Classic(speed_factor, inertion, local_factor)
+            builder.no_change_iteration_constraint = 5
+
+            builder.particles_count = 200
+
+            builder.lower_constraints = [0]
+            builder.upper_constraints = [255]
+
+            builder.constraint_callback = []
+
+            pso = builder.build()
+            pso.start_optimization()
+
+            # then
+            result = pso.get_best_particle().parameters_vector
+            result_lower = result[0]
+            #result_upper = result[1]
+            threshold_values.append(result_lower)
+            # dark image - upper border not important 
+        threshold_values = array(threshold_values)
+        print("Number of tries: 1000")
+        number_of_correct = numpy.logical_and(threshold_values <= 131, threshold_values >= 129)
+        print("Number of correct: " + str(number_of_correct.sum()))
+        print("Mean value: ", str(threshold_values.mean()))
+        print("Variance: ", str(threshold_values.var()))
+        self.assertTrue(True)
 
 if __name__ == '__main__':
     unittest.main()

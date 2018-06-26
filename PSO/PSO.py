@@ -17,6 +17,8 @@ class PSO:
 
     _minimal_change = 0
     _no_change_iteration_constraint = 0
+    _min_iteration_number = 1
+    _max_iteration_number = float("inf")
 
     # Ze względu na szas obliczeń ususięto dodatkowe funkcje
     
@@ -34,9 +36,10 @@ class PSO:
         {print("{0:.3f}".format(val), end = ' ', sep = ' ', flush = True) for val in best_particle.parameters_vector}
         print("")
         print("Fitness: ", best_particle.fitness)
-        print("Neighbourhood: ", best_particle.neighbourhood_index)
+        if(hasattr(best_particle, 'neighbourhood_index')):
+            print("Neighbourhood: ", best_particle.neighbourhood_index)
         
-        while(no_fitness_change_count < self._no_change_iteration_constraint):
+        while(((no_fitness_change_count < self._no_change_iteration_constraint) or (it < self._min_iteration_number)) and (it < self._max_iteration_number)):
             previousBest = best_particle.fitness
 
             self._swarm.optimize(self.particle_swarm, best_particle)   

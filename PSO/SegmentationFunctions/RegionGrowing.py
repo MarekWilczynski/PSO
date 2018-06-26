@@ -5,6 +5,7 @@ import numpy as np
 
 class RegionGrowing(base.SegmentationFunction):
     """Klasa przeprowadzająca rozrost obszaru w języku Python"""
+    # src: https://github.com/Panchamy/RegionGrowing
 
     def __init__(self, input_image):
         return super().__init__(input_image)

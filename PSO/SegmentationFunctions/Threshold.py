@@ -10,7 +10,7 @@ class Threshold(SegmentationFunction):
         
     def get_result(self, parameters_vector):
         
-        binary_image = cv.threshold(self._input_image, parameters_vector[0], parameters_vector[1], cv.THRESH_BINARY) 
+        binary_image = cv.threshold(self._input_image, parameters_vector[0], 255, cv.THRESH_BINARY) 
 
         return binary_image[1]
 
