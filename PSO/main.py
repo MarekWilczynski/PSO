@@ -2,7 +2,7 @@ from PSO import PSO
 from DataInitialization.PSONeighbourhoodBuilder import PSONeighbourhoodBuilder
 
 from FitnessFunctions.BinaryImagesDiceIndex import BinaryImagesDiceIndex
-from SegmentationFunctions.BarcodeSegmentation import BarcodeSegmentation
+from SegmentationFunctions.LungsSegmentationMatlab import LungsSegmentationMatlab
 from Swarms.NeighbourhoodSwarm import NeighbourhoodSwarm
 from Utilities.NumericalToObjectConverter import NumericalToObjectConverter
 
@@ -31,14 +31,17 @@ def proper_thresholds(particles_vector):
 #files = ["171_13_c.mha","2088_10_c.mha","2635_10_c.mha","2766_13_c.mha","597_11_c.mha","794_10_c.mha","833_13_c.mha","95_13_c.mha"]
 #files = [file[:-4] for file in files_with_extensions]
 
-ref_img = cv2.imread("..\\PSOTests\\TestImages\\barcodes_ref.png",0)
-in_img = cv2.imread("..\\PSOTests\\TestImages\\barcodes1.jpg",0)
+ref_img = cv2.imread(".\\Images\\Referential\\Dicoms\\pluca_n1.png",0)
+in_img = pydicom.dcmread(".\\Images\\Input\\Dicoms\\pluca_n1.dcm",0)
 
 se_types = ['ball', 'ellipsoid']
 
+spacing = in_img.PixelSpacing
+in_img = in_img.pixel_array
+
 builder = PSONeighbourhoodBuilder()
 
-builder.segmentation_function = BarcodeSegmentation(in_img)
+builder.segmentation_function = LungsSegmentationMatlab(in_img,spacing, se_types)
 builder.fitness_function = BinaryImagesDiceIndex(ref_img)
 inertia = 0.05
 global_speed = 0.35 # speed towards global maximum
@@ -58,8 +61,8 @@ builder.constraint_callback = proper_thresholds
 
 builder.particles_count = 150
 
-builder.lower_constraints = [1, 1, 3, 3, 50, 50]
-builder.upper_constraints = [255, 255, 30, 30, 800, 800]
+builder.lower_constraints = [-400, 0, 0, 1,0, 1,0, 1,0, 1,0, 1]
+builder.upper_constraints = [-100, 60, 1.9999999, 20,1.9999999, 20,1.9999999, 20,1.9999999, 20,1.9999999, 20]
 
 
 print("Initialization started")

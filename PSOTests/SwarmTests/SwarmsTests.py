@@ -124,7 +124,7 @@ class Test_SwarmsTests(unittest.TestCase):
             builder.swarm = Classic(speed_factor, inertion, local_factor)
             builder.no_change_iteration_constraint = 5
 
-            builder.particles_count = 200
+            builder.particles_count = 75
 
             builder.lower_constraints = [0]
             builder.upper_constraints = [255]

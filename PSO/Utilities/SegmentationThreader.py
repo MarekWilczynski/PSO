@@ -8,7 +8,6 @@ class SegmentationThreader(threading.Thread):
     """Class allowing asynchronous segmentation, increasing speed of computation"""
         
     _segmentation_fun = []
-    _fitness_fun = []
     _particle = []
     segmentation_result = []
 

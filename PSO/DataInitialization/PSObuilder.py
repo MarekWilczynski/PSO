@@ -14,6 +14,8 @@ class PSObuilder:
     swarm = []
     segmentation_function = []
     fitness_function = []   
+    min_iteration_number = 1
+    max_iteration_number = float("inf")
 
     # particles properties
     particles_count = 0
@@ -33,6 +35,8 @@ class PSObuilder:
         pso._segmentation_function = self.segmentation_function
         pso._fitness_function = self.fitness_function
         pso._no_change_iteration_constraint = self.no_change_iteration_constraint
+        pso._max_iteration_number = self.max_iteration_number
+        pso._min_iteration_number = self.min_iteration_number
 
         factory = ParticleFactory(self.lower_constraints, self.upper_constraints)
 

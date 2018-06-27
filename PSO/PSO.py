@@ -20,6 +20,7 @@ class PSO:
     _min_iteration_number = 1
     _max_iteration_number = float("inf")
 
+    best_particle = []
     # Ze względu na szas obliczeń ususięto dodatkowe funkcje
     
     def start_optimization(self):
@@ -29,20 +30,20 @@ class PSO:
 
         print("Initializing fitness values")
         self.update_fitness_values() 
-        best_particle = deepcopy(max(self.particle_swarm, key = lambda p:p.fitness,))
+        self.best_particle = deepcopy(max(self.particle_swarm, key = lambda p:p.fitness,))
         print("Initializing fitness values finished")
 
         print("Best vector before optimization: ")
-        {print("{0:.3f}".format(val), end = ' ', sep = ' ', flush = True) for val in best_particle.parameters_vector}
+        {print("{0:.3f}".format(val), end = ' ', sep = ' ', flush = True) for val in self.best_particle.parameters_vector}
         print("")
-        print("Fitness: ", best_particle.fitness)
-        if(hasattr(best_particle, 'neighbourhood_index')):
-            print("Neighbourhood: ", best_particle.neighbourhood_index)
+        print("Fitness: ", self.best_particle.fitness)
+        if(hasattr(self.best_particle, 'neighbourhood_index')):
+            print("Neighbourhood: ", self.best_particle.neighbourhood_index)
         
         while(((no_fitness_change_count < self._no_change_iteration_constraint) or (it < self._min_iteration_number)) and (it < self._max_iteration_number)):
-            previousBest = best_particle.fitness
+            previousBest = self.best_particle.fitness
 
-            self._swarm.optimize(self.particle_swarm, best_particle)   
+            self._swarm.optimize(self.particle_swarm, self.best_particle)   
                      
             start = time()  
             self.update_fitness_values() 
@@ -51,11 +52,11 @@ class PSO:
             print("Segmentation time: {0:.3f}".format(end-start), " seconds")
 
             new_best_particle = deepcopy(max(self.particle_swarm, key = lambda p:p.fitness,))
-            best_particle = deepcopy(max([best_particle, new_best_particle], key = lambda p:p.fitness,))
+            self.best_particle = deepcopy(max([self.best_particle, new_best_particle], key = lambda p:p.fitness,))
             
             it = it + 1
             print("Current iteration: " + str(it))
-            change = best_particle.fitness - previousBest
+            change = self.best_particle.fitness - previousBest
 
             if(change < self._minimal_change):
                 print("No change detected")
@@ -64,12 +65,9 @@ class PSO:
                 print("Change detected")
                 no_fitness_change_count = 0
 
-    def iterate(self):
-        self._swarm.optimize(self.particle_swarm, get_best_particle())
 
     def get_best_particle(self):
-        best_particle = max(self.particle_swarm, key = lambda p:p.fitness,)
-        return best_particle
+        return self.best_particle
 
     def update_fitness_values(self):
         el_count = 0

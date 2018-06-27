@@ -5,7 +5,6 @@ class SegmentationFunction(metaclass = abstract):
     """Abstract class, representing the fitness function. Is it being used by PSO to comput the fintess value"""
 
     _input_image = []
-    _matlab_eng = []
 
     @abstractmethod
     def __init__(self, input_image):
