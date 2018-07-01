@@ -5,19 +5,8 @@ np.seterr(divide='ignore', invalid='ignore')
 class CompareBinaryImages(FitnessFunction):
     """Fitness function that converts and compares given image to the refential image."""
 
-    # TODO: jest jednolinijkowiec. To pewnie wolno działa
-    # self niekonieczny, by działalo @staticmethod
-    # 
-    # https://stackoverflow.com/questions/8904694/how-to-normalize-a-2-dimensional-numpy-array-in-python-less-verbose
-    def _normalize(self, binary_img):
-        numpy_img = np.array(binary_img)
-        normalized = numpy_img / numpy_img.max()
 
-        normalized[normalized == np.inf] = 0
-        normalized[np.isnan(normalized)] = 0
 
-        return normalized
-    
     def __init__(self, ref_img):        
         super().__init__(self._normalize(ref_img))
         

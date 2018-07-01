@@ -34,14 +34,12 @@ def proper_thresholds(particles_vector):
 ref_img = cv2.imread(".\\Images\\Referential\\Dicoms\\pluca_n1.png",0)
 in_img = pydicom.dcmread(".\\Images\\Input\\Dicoms\\pluca_n1.dcm",0)
 
-se_types = ['ball', 'ellipsoid']
-
 spacing = in_img.PixelSpacing
 in_img = in_img.pixel_array
 
 builder = PSONeighbourhoodBuilder()
 
-builder.segmentation_function = LungsSegmentationMatlab(in_img,spacing, se_types)
+builder.segmentation_function = LungsSegmentationMatlab(in_img,spacing)
 builder.fitness_function = BinaryImagesDiceIndex(ref_img)
 inertia = 0.05
 global_speed = 0.35 # speed towards global maximum

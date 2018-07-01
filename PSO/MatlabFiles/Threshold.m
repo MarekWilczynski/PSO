@@ -1,4 +1,4 @@
-function [ thresholded ] = Threshold( treshhold, ref_img, input_img)
+function [ thresholded ] = Threshold( treshhold, input_img)
 
 thresholded = input_img > treshhold;
 

@@ -25,7 +25,7 @@ class Test_SwarmsTests(unittest.TestCase):
 
     def test_should_enter_given_coordinates(self):
         # given
-        swarm = Swarm(omega = 0.5, intertion = 0.5)
+        swarm = Swarm(omega = 0.5, inertion = 0.5, local = 0.1)
         swarm._lower_constraints = array([0] * 3)
         swarm._upper_constraints = array([1000] * 3)
 
@@ -44,7 +44,7 @@ class Test_SwarmsTests(unittest.TestCase):
 
     def test_should_have_given_speed(self):
         # given
-        swarm = Swarm(omega = 0.5, intertion = 0.5)
+        swarm = Swarm(omega = 0.5, inertion = 0.5, local = 0.1)
         swarm._lower_constraints = array([0] * 3)
         swarm._upper_constraints = array([1000] * 3)
         initial_parameters = [[100, 200, 300], [50, 100, 150]]
@@ -60,6 +60,7 @@ class Test_SwarmsTests(unittest.TestCase):
         self.assertEqual(list(particles[1]._speed), speed_after_iteration)    
 
     def test_should_find_threshold_value(self):
+        # Test has only a certain probability to succed (~90%)
         # given
         img = cv.imread("..\\PSOTests\\TestImages\\threshold_test.jpg", 0)
         lower_threshold = 130
@@ -102,51 +103,53 @@ class Test_SwarmsTests(unittest.TestCase):
         # self.assertEqual(result_upper, upper_threshold)
 
     def test_should_find_threshold_value_distribution(self):
-        counter = 0
-        threshold_values = []
-        for i in range(1000):
-            # given
-            img = cv.imread("..\\PSOTests\\TestImages\\threshold_test.jpg", 0)
-            lower_threshold = 130
-            upper_threhshold = 255
-            inertion = 0.05
-            speed_factor = 0.2
-            local_factor = 0.1
-            thresholded = cv.threshold(img, lower_threshold, upper_threhshold, cv.THRESH_BINARY)
-            thresholded = thresholded[1] # strange value on index #1
-            builder = PSObuilder()
+        perform = False
+        if(perform):
+            counter = 0
+            threshold_values = []
+            for i in range(1000):
+                # given
+                img = cv.imread("..\\PSOTests\\TestImages\\threshold_test.jpg", 0)
+                lower_threshold = 130
+                upper_threhshold = 255
+                inertion = 0.05
+                speed_factor = 0.2
+                local_factor = 0.1
+                thresholded = cv.threshold(img, lower_threshold, upper_threhshold, cv.THRESH_BINARY)
+                thresholded = thresholded[1] # strange value on index #1
+                builder = PSObuilder()
 
-            # when
+                # when
 
-            builder.segmentation_function = Threshold(img)
-            builder.fitness_function = BinaryImagesDiceIndex(thresholded)
-            builder.minimal_change = 0.00001
-            builder.swarm = Classic(speed_factor, inertion, local_factor)
-            builder.no_change_iteration_constraint = 5
+                builder.segmentation_function = Threshold(img)
+                builder.fitness_function = BinaryImagesDiceIndex(thresholded)
+                builder.minimal_change = 0.00001
+                builder.swarm = Classic(speed_factor, inertion, local_factor)
+                builder.no_change_iteration_constraint = 5
 
-            builder.particles_count = 75
+                builder.particles_count = 75
 
-            builder.lower_constraints = [0]
-            builder.upper_constraints = [255]
+                builder.lower_constraints = [0]
+                builder.upper_constraints = [255]
 
-            builder.constraint_callback = []
+                builder.constraint_callback = []
 
-            pso = builder.build()
-            pso.start_optimization()
+                pso = builder.build()
+                pso.start_optimization()
 
-            # then
-            result = pso.get_best_particle().parameters_vector
-            result_lower = result[0]
-            #result_upper = result[1]
-            threshold_values.append(result_lower)
-            # dark image - upper border not important 
-        threshold_values = array(threshold_values)
-        print("Number of tries: 1000")
-        number_of_correct = numpy.logical_and(threshold_values <= 131, threshold_values >= 129)
-        print("Number of correct: " + str(number_of_correct.sum()))
-        print("Mean value: ", str(threshold_values.mean()))
-        print("Variance: ", str(threshold_values.var()))
-        self.assertTrue(True)
+                # then
+                result = pso.get_best_particle().parameters_vector
+                result_lower = result[0]
+                #result_upper = result[1]
+                threshold_values.append(result_lower)
+                # dark image - upper border not important 
+            threshold_values = array(threshold_values)
+            print("Number of tries: 1000")
+            number_of_correct = numpy.logical_and(threshold_values <= 131, threshold_values >= 129)
+            print("Number of correct: " + str(number_of_correct.sum()))
+            print("Mean value: ", str(threshold_values.mean()))
+            print("Variance: ", str(threshold_values.var()))
+        self.assertTrue(perform)
 
 if __name__ == '__main__':
     unittest.main()

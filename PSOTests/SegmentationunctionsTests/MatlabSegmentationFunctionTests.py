@@ -33,7 +33,7 @@ class Test_MatlabSegmentationFunctionTests(unittest.TestCase):
         treshhold = 0.5
         
         # when
-        binary_image = segmentation_fun.get_result([treshhold], ref_img)
+        binary_image = segmentation_fun.get_result([treshhold])
         fitness_val = fitness_fun.get_result(binary_image)
 
         # then

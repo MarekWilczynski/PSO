@@ -14,9 +14,9 @@ class LungsSegmentationMatlab(MatlabSegmentationFunction):
     _segmentation = []
     _to_matlab_double = matlab.double
     
-    def __init__(self, input_img, spacing, se_types):
+    def __init__(self, input_img, spacing):
         self._spacing = matlab.double(list(map(float, spacing)))
-        self._converter = NumericalToObjectConverter(se_types)
+        self._converter = NumericalToObjectConverter(['ball', 'ellipsoid'])
         super().__init__(input_img)        
         self._segmentation = self._matlab_eng.Fun_SMP_SegmentacjaPluc
         
