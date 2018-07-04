@@ -29,14 +29,14 @@ class BarcodeSegmentation(base.SegmentationFunction):
         #objects_to_remove_height = 21
         #objects_to_remove_width = 35
 
-        lower_threshold = floor(parameters_vector[0])
-        upper_threshold = floor(parameters_vector[1])
+        threshhold = floor(parameters_vector[0])
+        output_value = 255
 
-        blackhat_kernel_size = floor(parameters_vector[2])
-        morphology_kernel_size = floor(parameters_vector[3])
+        blackhat_kernel_size = floor(parameters_vector[1])
+        morphology_kernel_size = floor(parameters_vector[2])
 
-        objects_to_remove_height = floor(parameters_vector[4])
-        objects_to_remove_width = floor(parameters_vector[5])
+        objects_to_remove_height = floor(parameters_vector[3])
+        objects_to_remove_width = floor(parameters_vector[4])
         
         # image loading
         im = self._input_image
@@ -46,7 +46,7 @@ class BarcodeSegmentation(base.SegmentationFunction):
         im = morphologyEx(im, cv2.MORPH_BLACKHAT, kernel, anchor=(1, 0))
 
         #sogliatura
-        thresh, im = cv2.threshold(im, lower_threshold, upper_threshold, cv2.THRESH_BINARY)
+        thresh, im = cv2.threshold(im, threshhold, output_value, cv2.THRESH_BINARY)
 
         #operazioni  morfologiche
         kernel = np.ones((1, morphology_kernel_size), np.uint8)

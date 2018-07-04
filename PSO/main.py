@@ -57,7 +57,7 @@ builder.no_change_iteration_constraint = 5
 
 builder.constraint_callback = proper_thresholds
 
-builder.particles_count = 150
+builder.particles_count = 45
 
 builder.lower_constraints = [-400, 0, 0, 1,0, 1,0, 1,0, 1,0, 1]
 builder.upper_constraints = [-100, 60, 1.9999999, 20,1.9999999, 20,1.9999999, 20,1.9999999, 20,1.9999999, 20]
@@ -108,6 +108,9 @@ print(best_fitness)
 
 with open("wyniki.txt", "a") as f:
     f.write("Najlepsza segmentacja o wartości przystosowania {} dzieki wektorowi {}. \n".format(best_fitness, vector_string))
+
+with open("fitness_log.txt", "a") as f:
+    f.write("".join(str(pso.fitness_record)))
 
 img = builder.segmentation_function.get_result(best_particle.parameters_vector)
 cv2.imshow("test",array(img))

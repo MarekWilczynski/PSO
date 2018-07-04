@@ -15,6 +15,8 @@ class PSO:
     # function used to do the segmentation
     _segmentation_function = []
 
+    fitness_record = []
+
     _minimal_change = 0
     _no_change_iteration_constraint = 0
     _min_iteration_number = 1
@@ -53,6 +55,7 @@ class PSO:
 
             new_best_particle = deepcopy(max(self.particle_swarm, key = lambda p:p.fitness,))
             self.best_particle = deepcopy(max([self.best_particle, new_best_particle], key = lambda p:p.fitness,))
+            self.fitness_record.append(self.best_particle.fitness)
             
             it = it + 1
             print("Current iteration: " + str(it))
